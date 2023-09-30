@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script>
+    var socket = new WebSocket("ws://" + window.location.hostname + "/ws");
+
+    socket.onmessage = function (event) {
+      var data = JSON.parse(event.data);
+      document.getElementById('red').value = data.red;
+      document.getElementById('green').value = data.green;
+      document.getElementById('blue').value = data.blue;
+      document.getElementById('white').value = data.white;
+    };
+
+    function updateLed(led, value) {
+      var data = {
+        red: document.getElementById('red').value,
+        green: document.getElementById('green').value,
+        blue: document.getElementById('blue').value,
+        white: document.getElementById('white').value
+      };
+      data[led] = value;
+      socket.send(JSON.stringify(data));
+    }
+  </script>
+</head>
+
+<body>
+  <h2>LED Control</h2>
+  <p>Red: <input type="range" id="red" min="0" max="255" onchange="updateLed('red', this.value)"></p>
+  <p>Green: <input type="range" id="green" min="0" max="255" onchange="updateLed('green', this.value)"></p>
+  <p>Blue: <input type="range" id="blue" min="0" max="255" onchange="updateLed('blue', this.value)"></p>
+  <p>White: <input type="range" id="white" min="0" max="255" onchange="updateLed('white', this.value)"></p>
+</body>
+
+</html>
